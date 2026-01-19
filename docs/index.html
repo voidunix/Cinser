@@ -1,1 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tervia Cinser - Open-source Operating System</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="/image/favicon.png" type="image/png">
 
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Configuração de Fonte -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Animação suave para os botões */
+        .btn-hover {
+            transition: all 0.3s ease;
+        }
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        /* Estilo para ícones com círculo de fundo */
+        .icon-circle {
+            transition: all 0.3s ease;
+            box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+        }
+        .group:hover .icon-circle {
+            transform: scale(1.1);
+            box-shadow: 0 0 0 10px rgba(220, 38, 38, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 flex min-h-screen">
+
+    <!-- BARRA LATERAL (Esquerda) -->
+    <aside class="w-64 bg-gray-900 text-white flex-shrink-0 hidden md:flex flex-col h-screen sticky top-0 border-r border-gray-800">
+        <!-- Logo Area -->
+        <div class="p-6 border-b border-gray-800 flex items-center gap-3">
+            <!-- Fallback se a imagem não carregar: Mostra ícone -->
+            <img src="/image/logo.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'" alt="Cinser Logo" class="h-8 w-8 object-contain">
+            <i class="fas fa-terminal text-red-500 text-2xl hidden"></i>
+            <span class="text-xl font-bold tracking-wide">Cinser OS</span>
+        </div>
+
+        <!-- Navegação -->
+        <nav class="flex-grow p-4">
+            <ul class="space-y-2">
+                <li>
+                    <a href="index.html" class="flex items-center gap-3 px-4 py-3 bg-red-600 rounded-lg text-white font-medium shadow-lg shadow-red-900/20">
+                        <i class="fas fa-home w-5"></i> Home
+                    </a>
+                </li>
+                <li>
+                    <a href="docs.html" class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors">
+                        <i class="fas fa-book w-5"></i> Docs
+                    </a>
+                </li>
+                <li>
+                    <a href="download.html" class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors">
+                        <i class="fas fa-download w-5"></i> Download
+                    </a>
+                </li>
+                <li>
+                    <a href="https://github.com/voidunix/Cinser" target="_blank" rel="noopener" class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors">
+                        <i class="fab fa-github w-5"></i> Source
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Status do Sistema (Decorativo) -->
+        <div class="p-6 border-t border-gray-800">
+            <div class="bg-gray-800 rounded p-3">
+                <p class="text-xs text-gray-500 mb-1">LATEST BUILD</p>
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                    <span class="text-sm font-mono text-gray-300">v0.0.1</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <div class="flex-1 flex flex-col min-w-0">
+        
+        <!-- HERO SECTION (Cabeçalho Vermelho) -->
+        <header class="bg-gradient-to-br from-red-700 via-red-600 to-red-800 text-white pt-24 pb-32 px-4 relative overflow-hidden">
+            <!-- SVG de Fundo (Modificado - Ondas abstratas em vez de triângulo) -->
+            <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+                <svg viewBox="0 0 1440 320" class="w-full h-full object-cover" preserveAspectRatio="none">
+                    <path fill="white" fill-opacity="1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,165.3C1248,171,1344,149,1392,138.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+                </svg>
+            </div>
+
+            <!-- Partículas decorativas (Círculos flutuantes) -->
+            <div class="absolute top-10 right-10 w-32 h-32 bg-white opacity-5 rounded-full blur-2xl"></div>
+            <div class="absolute bottom-10 left-10 w-24 h-24 bg-red-400 opacity-20 rounded-full blur-xl"></div>
+
+            <div class="max-w-4xl mx-auto text-center relative z-10">
+                <!-- Título Principal -->
+                <h1 class="text-5xl md:text-7xl font-bold mb-4 tracking-tight drop-shadow-md">Cinser</h1>
+                
+                <!-- Subtítulo -->
+                <p class="text-xl md:text-2xl font-light text-red-50 mb-10 tracking-wide">
+                    An operating system for people who value control, freedom, and understanding over abstraction.
+                </p>
+
+                <!-- Botões de Ação -->
+                <div class="flex flex-col md:flex-row justify-center items-center gap-4">
+                    <a href="https://github.com/voidunix/Cinser" target="_blank" class="btn-hover px-6 py-3 rounded-md border border-white bg-white/5 backdrop-blur-sm text-white font-medium hover:bg-white/20 w-full md:w-auto">
+                        <i class="fab fa-github mr-2"></i> View on GitHub
+                    </a>
+                    <a href="download.html" class="btn-hover px-8 py-3 rounded-md bg-white text-red-700 font-bold shadow-xl hover:bg-gray-50 w-full md:w-auto">
+                        <i class="fas fa-download mr-2"></i> Download Now
+                    </a>
+                    <a href="docs.html" class="btn-hover px-6 py-3 rounded-md border border-white bg-white/5 backdrop-blur-sm text-white font-medium hover:bg-white/20 w-full md:w-auto">
+                        <i class="fas fa-book mr-2"></i> Documentation
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- FEATURES SECTION (Recursos) -->
+        <main class="flex-grow bg-white relative z-10 -mt-10 rounded-t-3xl mx-4 md:mx-8 shadow-2xl border-t border-gray-100">
+            <div class="max-w-6xl mx-auto px-6 py-16">
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+                    
+                    <!-- Feature 1 -->
+                    <div class="group p-6 rounded-2xl bg-white hover:bg-red-50/50 transition duration-300 border border-transparent hover:border-red-100">
+                        <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-red-100 text-red-600 mb-6 icon-circle">
+                            <i class="fas fa-microchip text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">Hardware Support</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            Focused on the x86 family — starting with <span class="font-semibold text-gray-800">i386</span>, with a path to <span class="font-semibold text-gray-800">x86_64</span>. Boots via <span class="font-semibold text-gray-800">GRUB + Multiboot</span> and aims to stay simple, transparent, and hackable.
+                        </p>
+                    </div>
+
+                    <!-- Feature 2 -->
+                    <div class="group p-6 rounded-2xl bg-white hover:bg-red-50/50 transition duration-300 border border-transparent hover:border-red-100">
+                        <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-red-100 text-red-600 mb-6 icon-circle">
+                            <i class="fas fa-cogs text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">Custom Core</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            Sistema totalmente autoral e próprio. Kernel monolítico otimizado, escrito do zero em <strong>C</strong> e <strong>ASSEMBLY</strong> para máxima performance bruta.
+                        </p>
+                    </div>
+
+                    <!-- Feature 3 -->
+                    <div class="group p-6 rounded-2xl bg-white hover:bg-red-50/50 transition duration-300 border border-transparent hover:border-red-100">
+                        <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-red-100 text-red-600 mb-6 icon-circle">
+                            <i class="fas fa-code-branch text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">Open Source</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            Open-source under the <span class="font-semibold text-gray-800">GNU GPLv3</span> — contribute, fork, and learn freely.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+
+        <!-- FOOTER (Rodapé Atualizado) -->
+        <footer class="bg-gray-900 text-gray-400 py-12 border-t border-gray-800 mt-auto">
+            <div class="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8">
+                
+                <!-- Coluna 1 -->
+                <div class="col-span-2 md:col-span-1">
+                    <div class="flex items-center gap-2 mb-4">
+                        <img src="/image/logo.png" onerror="this.style.display='none'" class="h-6 w-6 opacity-80" alt="Logo">
+                        <h4 class="text-white text-xl font-bold">Cinser</h4>
+                    </div>
+                    <p class="text-sm leading-relaxed">A sovereign computing environment developed by Tervia Corporation — scratch-built, transparent, and teachable.</p>
+                </div>
+
+                <!-- Coluna 2 -->
+                <div>
+                    <h5 class="text-white font-semibold mb-4 uppercase text-xs tracking-wider text-red-500">Documentation</h5>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="docs.html#installation" class="hover:text-red-400 transition">Getting Started</a></li>
+                        <li><a href="docs.html" class="hover:text-red-400 transition">Docs Overview</a></li>
+                        <li><a href="docs.html#installation" class="hover:text-red-400 transition">Building from Source</a></li>
+                    </ul>
+                </div>
+
+                <!-- Coluna 3 (Community - Itens removidos) -->
+                <div>
+                    <h5 class="text-white font-semibold mb-4 uppercase text-xs tracking-wider text-red-500">Community</h5>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="https://discord.gg/Nqb9qeraXE" target="_blank" rel="noopener" class="hover:text-red-400 transition">Discord Server</a></li>
+                        <li><a href="https://github.com/voidunix/Cinser/issues" target="_blank" rel="noopener" class="hover:text-red-400 transition">Issue Tracker</a></li>
+                        <!-- Removido: Live Dev, Code of Conduct -->
+                    </ul>
+                </div>
+
+                <!-- Coluna 4 (More - Item removido) -->
+                <div>
+                    <h5 class="text-white font-semibold mb-4 uppercase text-xs tracking-wider text-red-500">More</h5>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="https://github.com/voidunix/Cinser" target="_blank" rel="noopener" class="hover:text-red-400 transition">GitHub</a></li>
+                        <li><a href="https://github.com/voidunix/Cinser/blob/main/LICENSE" target="_blank" rel="noopener" class="hover:text-red-400 transition">License (GPLv3)</a></li>
+                        <!-- Removido: Contribute -->
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="max-w-6xl mx-auto px-6 mt-12 pt-8 border-t border-gray-800 text-center text-sm flex flex-col md:flex-row justify-between items-center">
+                <span>&copy; 2026 Cinser OS Project. All rights reserved.</span>
+                <div class="mt-4 md:mt-0 space-x-4">
+                    <a href="https://github.com/voidunix/Cinser" target="_blank" rel="noopener" class="hover:text-white"><i class="fab fa-github"></i></a>
+                    <a href="download.html" class="hover:text-white"><i class="fas fa-download"></i></a>
+                    <a href="https://discord.gg/Nqb9qeraXE" target="_blank" rel="noopener" class="hover:text-white"><i class="fab fa-discord"></i></a>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+</body>
+</html>
