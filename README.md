@@ -1,4 +1,4 @@
-# 🪐 Tervia Cinser — Build (Makefile) Guide
+# 🪐 Tervia Cinser — README
 
 ![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)
 ![Since: 2026](https://img.shields.io/badge/Since-2026-rebeccapurple)
