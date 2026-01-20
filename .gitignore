@@ -4,3 +4,6 @@ build/
 *.bin
 *.iso
 EOF
+echo "intel prm to 2017/" >> .gitignore
+git add .gitignore
+git commit -m "Ignore Intel PRM PDFs"

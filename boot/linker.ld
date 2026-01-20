@@ -24,4 +24,7 @@ SECTIONS
     *(COMMON)
     *(.bss*)
   }
+
+  /* Fim do kernel (usado pelo memory manager) */
+  PROVIDE(_kernel_end = .);
 }

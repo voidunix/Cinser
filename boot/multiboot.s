@@ -13,13 +13,23 @@
 SECTION .multiboot
 align 4
 
-; Multiboot v1 header
-; Flags:
-;  bit0 = align modules on page boundaries
-;  bit1 = request meminfo
-; (Do NOT set bit16 unless you also provide the 5 address fields.)
+%define MULTIBOOT_MAGIC     0x1BADB002
+%define MULTIBOOT_PAGE_ALIGN (1 << 0)
+%define MULTIBOOT_MEMORY_INFO (1 << 1)
+%define MULTIBOOT_VIDEO_MODE  (1 << 2) ; <-- Pedido de vídeo
 
-dd 0x1BADB002          ; magic
-dd 0x00000003          ; flags: align + meminfo
+%define MULTIBOOT_FLAGS     (MULTIBOOT_PAGE_ALIGN | MULTIBOOT_MEMORY_INFO | MULTIBOOT_VIDEO_MODE)
+%define MULTIBOOT_CHECKSUM  -(MULTIBOOT_MAGIC + MULTIBOOT_FLAGS)
 
-dd -(0x1BADB002 + 0x00000003) ; checksum
+dd MULTIBOOT_MAGIC
+dd MULTIBOOT_FLAGS
+dd MULTIBOOT_CHECKSUM
+
+; Campos de endereço (não usados se bit 16 estiver desligado, mas mantemos o espaço)
+dd 0, 0, 0, 0, 0
+
+; --- Configuração de Vídeo ---
+; 0 = Gráfico Linear, 1 = Texto
+dd 0    
+; Largura, Altura, Profundidade (Bits por Pixel)
+dd 1024, 768, 32
