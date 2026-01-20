@@ -1,5 +1,5 @@
 #include "isr.h"
-#include "vga.h"
+#include "console.h"
 
 static const char *exc_names[32] = {
     "Divide-by-zero", "Debug", "NMI", "Breakpoint",
