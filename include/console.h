@@ -52,6 +52,10 @@ int console_get_rows(void);
 void console_set_cursor(int col, int row);
 void console_get_cursor(int* col, int* row);
 
+void print_u64(uint64_t x);
+
+void print_int(int v);
+
 // MACROS DE COMPATIBILIDADE
 // Isso faz seu código antigo que chama 'vga_write' chamar 'console_write'
 #define vga_init()        console_init()

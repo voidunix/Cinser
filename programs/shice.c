@@ -24,6 +24,9 @@
 #include "programs/shice.h"
 #include "shice/shice_help.h"
 #include "shice/shice_sinfetch.h"
+#include "shice/shice_date.h"
+#include "shice/shice_hour.h"
+#include "shice/shice_calc.h"
 #include "sysconfig.h"
 #include "memory.h"
 
@@ -209,7 +212,10 @@ void shice_run(void) {
         if (streq(s, "clear")) { cmd_clear(); continue; }
         if (streq(s, "ver")) { cmd_ver(); continue; }
         if (streq(s, "sinfetch")) { shice_cmd_sinfetch(); continue; }
+        if (starts_with(s, "calc")) { shice_cmd_calc(s); continue; }
         if (starts_with(s, "echo")) { cmd_echo(s); continue; }
+        if (streq(s, "hour")) { print_rtc_time(); continue; }
+        if (streq(s, "date")) { print_rtc_date(); continue; }
 
         if (streq(s, "ui")) {
             console_write("Entrando no desktop UI...\n");

@@ -312,3 +312,54 @@ void console_get_cursor(int* col, int* row) {
     if (col) *col = g_cur_col;
     if (row) *row = g_cur_row;
 }
+
+void print_u64(uint64_t x) {
+    char buf[21]; // até 20 dígitos + '\0'
+    int i = 0;
+
+    /* Caso especial: zero */
+    if (x == 0) {
+        console_putc('0');
+        return;
+    }
+
+    /* Converte número em string (ao contrário) */
+    while (x > 0) {
+        buf[i++] = '0' + (x % 10);
+        x /= 10;
+    }
+
+    /* Imprime na ordem correta */
+    while (i--)
+        console_putc(buf[i]);
+}
+
+void print_int(int v) {
+    char buf[12];   // -2147483648 até 2147483647 (11 chars + \0)
+    int i = 0;
+
+    if (v == 0) {
+        console_putc('0');
+        return;
+    }
+
+    if (v < 0) {
+        console_putc('-');
+        /* cuidado com INT_MIN: -INT_MIN overflow
+           truque: converte pra unsigned */
+        uint32_t x = (uint32_t)(-(int64_t)v);
+        while (x > 0) {
+            buf[i++] = '0' + (x % 10);
+            x /= 10;
+        }
+    } else {
+        uint32_t x = (uint32_t)v;
+        while (x > 0) {
+            buf[i++] = '0' + (x % 10);
+            x /= 10;
+        }
+    }
+
+    while (i--)
+        console_putc(buf[i]);
+}

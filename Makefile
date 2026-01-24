@@ -49,6 +49,9 @@ OBJS := \
   $(OBJDIR)/shice.o \
   $(OBJDIR)/splash.o \
   $(OBJDIR)/shice_sinfetch.o \
+  $(OBJDIR)/shice_calc.o \
+  $(OBJDIR)/shice_date.o \
+  $(OBJDIR)/shice_hour.o \
   $(OBJDIR)/shice_help.o
 
 .PHONY: all iso run clean dirs check-tools
@@ -147,7 +150,16 @@ $(OBJDIR)/shice.o: programs/shice.c include/programs/shice.h include/console.h i
 $(OBJDIR)/shice_help.o: shice/shice_help.c include/shice/shice_help.h include/console.h | dirs
 	$(CC) $(CFLAGS) -c $< -o $@
 
+$(OBJDIR)/shice_calc.o: shice/shice_calc.c include/shice/shice_calc.h include/console.h | dirs
+	$(CC) $(CFLAGS) -c $< -o $@
+
 $(OBJDIR)/shice_sinfetch.o: shice/shice_sinfetch.c include/shice/shice_sinfetch.h include/console.h | dirs
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJDIR)/shice_hour.o: shice/shice_hour.c include/shice/shice_hour.h include/console.h | dirs
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJDIR)/shice_date.o: shice/shice_date.c include/shice/shice_date.h include/console.h | dirs
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJDIR)/splash.o: kernel/splash.c include/splash.h | dirs

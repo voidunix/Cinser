@@ -19,10 +19,15 @@
 
 void shice_cmd_help(void) {
     console_write("Shice Shell - available commands:\n");
-    console_write("  help   - shows help with commands\n");
-    console_write("  clear  - Clears the terminal screen\n");
-    console_write("  echo   - Displays the user's text\n");
+    console_write("  help     - shows help with commands\n");
+    console_write("  clear    - Clears the terminal screen\n");
+    console_write("  echo     - Displays the user's text\n");
     console_write("  * echo <sintaxe>\n");
-    console_write("  ver    - Shows the current version of the Cinser\n");
-    console_write("  ui     - Enters Interface mode (non-functional)\n");
+    console_write("  ver      - Shows the current version of the Cinser\n");
+    console_write("  ui       - Enters Interface mode (non-functional)\n");
+    console_write("  calc     - Calculate addition, multiplication, and subtraction.\n");
+    console_write("  * calc <number A> <operator> <number B> \n");
+    console_write("  sinfetch - It displays information about the kernel, system, and hardware.\n");
+    console_write("  time     - Show Time (xx:xx:xx)\n");
+    console_write("  date     - Show Date (xx/xx/xx)\n");
 }
