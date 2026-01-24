@@ -1,3 +1,19 @@
+/****************************************************************************
+ * Projeto: Tervia Cinser OS
+ * Arquivo: splash.c
+ * Descrição: Núcleo do sistema operacional / Gerenciamento de processos.
+ * * Copyright (C) 2026 Tervia Corporation.
+ *
+ * Este programa é um software livre: você pode redistribuí-lo e/ou 
+ * modificá-lo sob os termos da Licença Pública Geral GNU como publicada 
+ * pela Free Software Foundation, bem como a versão 3 da Licença.
+ *
+ * Este programa é distribuído na esperança de que possa ser útil, 
+ * mas SEM NENHUMA GARANTIA; sem uma garantia implícita de ADEQUAÇÃO 
+ * a qualquer MERCADO ou APLICAÇÃO EM PARTICULAR. Veja a 
+ * Licença Pública Geral GNU para mais detalhes.
+ ****************************************************************************/
+
 #include "splash.h"
 #include "console.h"
 #include "delay.h"
@@ -149,22 +165,69 @@ void splash_show(uint32_t seconds) {
         last_y_pos = start_row + y;
     }
 
-    // --- Adição do Texto da Versão ---
-    const char* version_text = "Cinser Kernel v0.0.7";
-    
-    // Calcula o comprimento do texto
-    int text_len = 0;
-    while (version_text[text_len]) text_len++;
+// --- Adição do Texto da Versão ---
+    const char* version_lines[] = {
+        ",ad8888ba,   88                                                  ",
+        "d8\"'    `\"8b  \"\"                                                  ",
+        "d8'                                                               ",
+        "88             88  8b,dPPYba,   ,adPPYba,   ,adPPYba,  8b,dPPYba,  ",
+        "88             88  88P'   `\"8a  I8[    \"\"  a8P_____88  88P'   \"Y8  ",
+        "Y8,            88  88       88   `\"Y8ba,   8PP\"\"\"\"\"\"\"  88          ",
+        " Y8a.    .a8P  88  88       88  aa    ]8I  \"8b,   ,aa  88          ",
+        "  `\"Y8888Y\"'   88  88       88  `\"YbbdP\"'   `\"Ybbd8\"'  88          ",
+        "",
+        "Cinser Kernel v0.0.8"
+    };
 
-    // Centraliza horizontalmente
-    int text_col = (cols > text_len) ? (cols - text_len) / 2 : 0;
-    // Coloca 2 linhas abaixo da arte
-    int text_row = last_y_pos + 2;
+    int version_count = sizeof(version_lines) / sizeof(version_lines[0]);
+    int text_row = last_y_pos + 2; // Começa 2 linhas abaixo da arte anterior
 
-    if (text_row < rows) {
-        console_set_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK); // Cor branca para o texto
-        console_set_cursor(text_col, text_row);
-        console_write(version_text);
+    console_set_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
+
+    for (int i = 0; i < version_count; i++) {
+        if (text_row + i >= rows) break; // Evita escrever fora da tela
+
+        // Calcula a largura real desta linha específica
+        int line_len = 0;
+        while (version_lines[i][line_len]) line_len++;
+
+        // Centraliza a linha atual
+        int text_col = (cols > line_len) ? (cols - line_len) / 2 : 0;
+
+        console_set_cursor(text_col, text_row + i);
+        console_write(version_lines[i]);
+    }
+
+    // --- Configurações da Barra ---
+    int progress_width = 30; 
+    int progress_col = (cols - (progress_width + 2)) / 2;
+    int progress_row = text_row + version_count + 2;
+
+    if (progress_row < rows) {
+        for (int i = 0; i <= progress_width; i++) {
+            console_set_cursor(progress_col, progress_row);
+            
+            // Borda lateral
+            console_set_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
+            console_putc('[');
+
+            // Preenchimento com o NOVO caractere 128 (Cast para unsigned char)
+            console_set_color(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLACK);
+            for (int j = 0; j < i; j++) {
+                console_putc('\x80');   // OU console_putc((char)128);
+            }
+            
+            // Espaço vazio (caractere 32 é o espaço ' ')
+            console_set_color(VGA_COLOR_DARK_GREY, VGA_COLOR_BLACK);
+            for (int j = i; j < progress_width; j++) {
+                console_putc('.'); // Ou use ' ' para ficar vazio
+            }
+
+            console_set_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
+            console_putc(']');
+
+            delay_ms(150); 
+        }
     }
 
     // Segura na tela

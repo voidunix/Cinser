@@ -1,6 +1,6 @@
 /****************************************************************************
  * Projeto: Tervia Cinser OS
- * Arquivo: splash.h
+ * Arquivo: shice_sinfetch.h
  * Descrição: Núcleo do sistema operacional / Gerenciamento de processos.
  * * Copyright (C) 2026 Tervia Corporation.
  *
@@ -14,13 +14,7 @@
  * Licença Pública Geral GNU para mais detalhes.
  ****************************************************************************/
 
-#ifndef SPLASH_H
-#define SPLASH_H
+#pragma once
 
-#include <stdint.h>
-
-// Mostra a splash ASCII centralizada (em vermelho) por 'seconds' segundos.
-// Retorna após o tempo, sem iniciar o shell.
-void splash_show(uint32_t seconds);
-
-#endif
+// Comando: sinfetch
+void shice_cmd_sinfetch(void);

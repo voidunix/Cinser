@@ -1,3 +1,19 @@
+/****************************************************************************
+ * Projeto: Tervia Cinser OS
+ * Arquivo: shice.c
+ * Descrição: Núcleo do sistema operacional / Gerenciamento de processos.
+ * * Copyright (C) 2026 Tervia Corporation.
+ *
+ * Este programa é um software livre: você pode redistribuí-lo e/ou 
+ * modificá-lo sob os termos da Licença Pública Geral GNU como publicada 
+ * pela Free Software Foundation, bem como a versão 3 da Licença.
+ *
+ * Este programa é distribuído na esperança de que possa ser útil, 
+ * mas SEM NENHUMA GARANTIA; sem uma garantia implícita de ADEQUAÇÃO 
+ * a qualquer MERCADO ou APLICAÇÃO EM PARTICULAR. Veja a 
+ * Licença Pública Geral GNU para mais detalhes.
+ ****************************************************************************/
+
 #include <stdint.h>
 #include <stddef.h>
 
@@ -7,6 +23,7 @@
 #include "time.h"
 #include "programs/shice.h"
 #include "shice/shice_help.h"
+#include "shice/shice_sinfetch.h"
 #include "sysconfig.h"
 #include "memory.h"
 
@@ -143,11 +160,12 @@ static void cmd_clear(void) {
 }
 
 static void cmd_ver(void) {
-    console_write("Cinser 0.0.7 (Shice)\n");
+    console_write("Cinser Kernel 0.0.8 (Running Shice)\n");
     console_write("CPU: ");
     console_write(sysconfig_cpu_str());
     console_write("\n");
-    console_write(meminfo_str());
+    console_write("RAM: ");
+    console_write(sysconfig_mem_total_str());
     console_write("\n");
 }
 
@@ -190,6 +208,7 @@ void shice_run(void) {
         if (streq(s, "help")) { shice_cmd_help(); continue; }
         if (streq(s, "clear")) { cmd_clear(); continue; }
         if (streq(s, "ver")) { cmd_ver(); continue; }
+        if (streq(s, "sinfetch")) { shice_cmd_sinfetch(); continue; }
         if (starts_with(s, "echo")) { cmd_echo(s); continue; }
 
         if (streq(s, "ui")) {

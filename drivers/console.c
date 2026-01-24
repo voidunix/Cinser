@@ -1,3 +1,19 @@
+/****************************************************************************
+ * Projeto: Tervia Cinser OS
+ * Arquivo: console.c
+ * Descrição: Núcleo do sistema operacional / Gerenciamento de processos.
+ * * Copyright (C) 2026 Tervia Corporation.
+ *
+ * Este programa é um software livre: você pode redistribuí-lo e/ou 
+ * modificá-lo sob os termos da Licença Pública Geral GNU como publicada 
+ * pela Free Software Foundation, bem como a versão 3 da Licença.
+ *
+ * Este programa é distribuído na esperança de que possa ser útil, 
+ * mas SEM NENHUMA GARANTIA; sem uma garantia implícita de ADEQUAÇÃO 
+ * a qualquer MERCADO ou APLICAÇÃO EM PARTICULAR. Veja a 
+ * Licença Pública Geral GNU para mais detalhes.
+ ****************************************************************************/
+
 #include "video.h"
 #include "font.h"
 #include <stdint.h>
@@ -15,12 +31,13 @@ static void console_recompute_dims(void);
 // ---------------------------------------------------------------------------
 
 // Runtime font copy (protege contra corrupção de .rodata em certos caminhos)
-static uint8_t g_font_runtime[128][8];
+#define FONT_GLYPHS 129
+static uint8_t g_font_runtime[FONT_GLYPHS][8];
 static int g_font_ready = 0;
 
 static void font_runtime_init(void) {
     if (g_font_ready) return;
-    for (int i = 0; i < 128; i++) {
+    for (int i = 0; i < FONT_GLYPHS; i++) {
         for (int y = 0; y < 8; y++) {
             g_font_runtime[i][y] = font8x8_basic[i][y];
         }
@@ -107,7 +124,7 @@ static void draw_glyph_at(int col, int row, char c, uint32_t fg, uint32_t bg) {
     int y0 = row * LINE_H;
 
     int glyph_index = (unsigned char)c;
-    if (glyph_index > 127) glyph_index = 32;
+    if (glyph_index >= FONT_GLYPHS) glyph_index = 32;
 
     const uint8_t* glyph = g_font_runtime[glyph_index];
 
@@ -242,7 +259,7 @@ void console_putc(char c) {
 
     // Sanitiza char
     unsigned char uc = (unsigned char)c;
-    if (uc < 32 || uc > 127) c = ' ';
+    if (uc < 32 || uc > 128) c = ' ';
 
     // Escreve no buffer + desenha
     g_cells[g_cur_row][g_cur_col].ch = c;

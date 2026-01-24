@@ -32,6 +32,7 @@
 #include "mouse.h"
 #include "programs/shice.h"
 #include "splash.h"
+#include "math.h"
 
 #define MULTIBOOT_MAGIC 0x2BADB002u
 
@@ -109,7 +110,7 @@ void kernel_main(uint32_t magic, uint32_t mb_info) {
 	
 	console_init();
 	
-	vga_write("VBE 1.2 Universal Video BIOS Driver");
+	vga_write("VBE/GOB Video Driver");
 	vga_set_color(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLACK);
 	vga_write(" [OK]\n\n");
 	
@@ -162,7 +163,7 @@ void kernel_main(uint32_t magic, uint32_t mb_info) {
 
     vga_set_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
 	vga_write("[1] Memory... ");
-	memory_init(magic, mb_info);   // use a assinatura do seu kernel novo
+	memory_init(magic, mb_info);
 	vga_set_color(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLACK);
 	vga_write(" [OK]\n");
 
@@ -249,7 +250,7 @@ void kernel_main(uint32_t magic, uint32_t mb_info) {
     // Aguarda 5s apos o boot splash e entra direto no Shice (shell em modo console).
     // A UI (desktop) ainda existe e pode ser acessada pelo comando 'ui' dentro do Shice.
 	delay_time(2);
-    splash_show(5);
+    splash_show(3);
 	console_clear();
     shice_run();
 

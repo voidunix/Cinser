@@ -64,6 +64,8 @@ static uint32_t g_pmm_frames_total = 0;
 static uint32_t g_pmm_frames_used = 0;
 static uint32_t g_pmm_bitmap_bytes = 0;
 
+static const char* g_bootloader_str = "UNKNOWN";
+
 static inline void bitmap_set(uint32_t frame) {
     g_pmm_bitmap[frame >> 3] |= (uint8_t)(1u << (frame & 7u));
 }
@@ -357,6 +359,8 @@ const char* meminfo_str(void) {
 void memory_init(uint32_t multiboot_magic, uint32_t mb_info_ptr) {
     // Configuração de segurança: Heap de 16 MiB (Suficiente para Video 3MB + Kernel)
     // Antes era 512KiB, o que causava falha na alocação do Double Buffer.
+    g_bootloader_str = (multiboot_magic == MULTIBOOT_MAGIC) ? "GRUB2 MULTIBOOT" : "UNKNOWN";
+    
     const uint32_t KERNEL_HEAP_SIZE = 16u * 1024u * 1024u; 
 
     if (multiboot_magic != MULTIBOOT_MAGIC) {
@@ -444,4 +448,8 @@ void memory_init(uint32_t multiboot_magic, uint32_t mb_info_ptr) {
 
     // Inicializa o Heap com o tamanho novo (16MB)
     heap_init(heap_base, KERNEL_HEAP_SIZE);
+}
+
+const char* memory_bootloader_str(void) {
+    return g_bootloader_str;
 }

@@ -1,3 +1,19 @@
+/****************************************************************************
+ * Projeto: Tervia Cinser OS
+ * Arquivo: font.h
+ * Descrição: Núcleo do sistema operacional / Gerenciamento de processos.
+ * * Copyright (C) 2026 Tervia Corporation.
+ *
+ * Este programa é um software livre: você pode redistribuí-lo e/ou 
+ * modificá-lo sob os termos da Licença Pública Geral GNU como publicada 
+ * pela Free Software Foundation, bem como a versão 3 da Licença.
+ *
+ * Este programa é distribuído na esperança de que possa ser útil, 
+ * mas SEM NENHUMA GARANTIA; sem uma garantia implícita de ADEQUAÇÃO 
+ * a qualquer MERCADO ou APLICAÇÃO EM PARTICULAR. Veja a 
+ * Licença Pública Geral GNU para mais detalhes.
+ ****************************************************************************/
+
 #ifndef FONT_H
 #define FONT_H
 
@@ -6,7 +22,7 @@
 /* Fonte 8x8 IBM VGA - Tabela ASCII Completa (0-127)
  * Corrigida para evitar deslocamento de caracteres.
  */
-static const uint8_t font8x8_basic[128][8] = {
+static const uint8_t font8x8_basic[129][8] = {
     // 0-31: Caracteres de Controle (Não imprimíveis, preenchidos com zero)
     {0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0}, // 0-3
     {0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0}, // 4-7
@@ -125,7 +141,8 @@ static const uint8_t font8x8_basic[128][8] = {
     {0x18, 0x18, 0x18, 0x00, 0x18, 0x18, 0x18, 0x00}, // 124 |
     {0x70, 0x18, 0x18, 0x0E, 0x18, 0x18, 0x70, 0x00}, // 125 }
     {0x76, 0xDC, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, // 126 ~
-    {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}  // 127 DEL
+    {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},  // 127 DEL
+    {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}  // 128: Bloco Sólido
 };
 
 #endif

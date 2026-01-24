@@ -33,3 +33,11 @@ const char* sysconfig_cpu_str(void);
 // Memória total do PC em KiB (derivado do memory manager)
 uint32_t sysconfig_mem_total_kib(void);
 
+// Formata um valor em KiB para uma string curta (ex: "512 KiB", "1.50 MiB", "7.75 GiB").
+// Usa base 1024 (IEC). out deve ter pelo menos ~24 bytes.
+void sysconfig_format_kib(uint32_t kib, char *out, uint32_t out_size);
+
+// Memória total do PC já formatada (buffer estático interno)
+const char* sysconfig_mem_total_str(void);
+
+

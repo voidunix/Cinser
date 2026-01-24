@@ -37,3 +37,5 @@ uint32_t memory_free_kib(void);
 
 // String pronta pra exibir no VGA
 const char* meminfo_str(void);
+// Bootloader/boot protocol (ex: "GRUB2 MULTIBOOT")
+const char* memory_bootloader_str(void);

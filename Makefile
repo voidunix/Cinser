@@ -13,6 +13,9 @@ CC      := gcc
 LD      := ld
 AS      := nasm
 
+# Fedora costuma usar grub2-mkrescue ao invés de grub-mkrescue.
+GRUB_MKRESCUE := $(shell command -v grub-mkrescue 2>/dev/null || command -v grub2-mkrescue 2>/dev/null)
+
 # Flags de compilação
 CFLAGS  := -m32 -ffreestanding -fno-pie -fno-stack-protector -O2 -Wall -Wextra -Iinclude \
            -fno-asynchronous-unwind-tables -fno-omit-frame-pointer
@@ -34,6 +37,7 @@ OBJS := \
   $(OBJDIR)/sysconfig.o \
   $(OBJDIR)/time.o \
   $(OBJDIR)/delay.o \
+  $(OBJDIR)/math.o \
   $(OBJDIR)/keyboard.o \
   $(OBJDIR)/mouse.o \
   $(OBJDIR)/video.o \
@@ -44,6 +48,7 @@ OBJS := \
   $(OBJDIR)/shell.o \
   $(OBJDIR)/shice.o \
   $(OBJDIR)/splash.o \
+  $(OBJDIR)/shice_sinfetch.o \
   $(OBJDIR)/shice_help.o
 
 .PHONY: all iso run clean dirs check-tools
@@ -52,12 +57,13 @@ all: iso
 
 check-tools:
 	@command -v $(AS) >/dev/null || (echo "ERRO: nasm nao encontrado" && exit 1)
-	@command -v grub-mkrescue >/dev/null || (echo "ERRO: grub-mkrescue nao encontrado" && exit 1)
+	@[ -n "$(GRUB_MKRESCUE)" ] || (echo "ERRO: grub-mkrescue/grub2-mkrescue nao encontrado" && exit 1)
 	@command -v xorriso >/dev/null || (echo "ERRO: xorriso nao encontrado" && exit 1)
+	@command -v grub-mkstandalone >/dev/null || true
 
 # Criação de pastas
 dirs:
-	@mkdir -p $(OBJDIR) $(ISODIR)/boot/grub
+	@mkdir -p $(OBJDIR) $(ISODIR)/boot/grub $(ISODIR)/EFI/BOOT
 
 # --- ASM ---
 
@@ -111,6 +117,10 @@ $(OBJDIR)/time.o: kernel/time.c include/time.h | dirs
 $(OBJDIR)/delay.o: kernel/delay.c include/delay.h | dirs
 	$(CC) $(CFLAGS) -c $< -o $@
 
+$(OBJDIR)/math.o: kernel/math.c include/math.h | dirs
+	$(CC) $(CFLAGS) -c $< -o $@
+
+
 # --- NOVOS DRIVERS DE VIDEO ---
 
 $(OBJDIR)/video.o: drivers/video.c include/video.h include/multiboot.h | dirs
@@ -137,6 +147,9 @@ $(OBJDIR)/shice.o: programs/shice.c include/programs/shice.h include/console.h i
 $(OBJDIR)/shice_help.o: shice/shice_help.c include/shice/shice_help.h include/console.h | dirs
 	$(CC) $(CFLAGS) -c $< -o $@
 
+$(OBJDIR)/shice_sinfetch.o: shice/shice_sinfetch.c include/shice/shice_sinfetch.h include/console.h | dirs
+	$(CC) $(CFLAGS) -c $< -o $@
+
 $(OBJDIR)/splash.o: kernel/splash.c include/splash.h | dirs
 	$(CC) $(CFLAGS) -c $< -o $@
 
@@ -150,8 +163,23 @@ $(KERNEL): $(OBJS) boot/linker.ld
 iso: check-tools $(KERNEL)
 	@cp -f $(KERNEL) $(ISODIR)/boot/kernel.bin
 	@cp -f boot/grub/grub.cfg $(ISODIR)/boot/grub/grub.cfg
+	@cp -f boot/grub/uefi-early.cfg $(ISODIR)/boot/grub/uefi-early.cfg
+	@# -----------------------------------------------------------------------
+	@# UEFI (x86_64) opcional: gera BOOTX64.EFI via grub-mkstandalone.
+	@# Isso permite boot em máquinas UEFI modernas, mantendo o kernel i386.
+	@# Requisito típico no Fedora/Debian: pacote grub2-efi-x64 ou grub-efi-amd64.
+	@# Se não estiver instalado, o ISO continua bootável via BIOS/CSM.
+	@# -----------------------------------------------------------------------
+	@if command -v grub-mkstandalone >/dev/null 2>&1 && [ -d /usr/lib/grub/x86_64-efi ]; then \
+		echo "[UEFI] Gerando BOOTX64.EFI (GRUB standalone)..."; \
+		grub-mkstandalone -O x86_64-efi -d /usr/lib/grub/x86_64-efi -o $(ISODIR)/EFI/BOOT/BOOTX64.EFI \
+			"boot/grub/grub.cfg=boot/grub/uefi-early.cfg"; \
+	else \
+		echo "[UEFI] BOOTX64.EFI nao gerado (grub-mkstandalone ou /usr/lib/grub/x86_64-efi ausente)."; \
+		echo "      Dica: instale grub2-efi-x64 (Fedora) / grub-efi-amd64-bin (Debian/Ubuntu)."; \
+	fi
 	@echo "[ISO] Gerando $(ISO) ..."
-	@grub-mkrescue -o $(ISO) $(ISODIR)
+	@$(GRUB_MKRESCUE) -o $(ISO) $(ISODIR)
 	@echo "OK: gerado $(ISO)"
 
 run: iso

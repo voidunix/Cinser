@@ -22,6 +22,7 @@ static char g_cpu_brand[49];
 static uint32_t g_base_mhz = 0;
 static uint32_t g_max_mhz = 0;
 static char g_cpu_str[80];
+static char g_mem_total_str[32];
 
 static inline void cpuid(uint32_t leaf, uint32_t subleaf, uint32_t *a, uint32_t *b, uint32_t *c, uint32_t *d) {
     uint32_t eax, ebx, ecx, edx;
@@ -62,6 +63,29 @@ static void u32_to_dec(uint32_t v, char *out) {
     int o = 0;
     while (i > 0) out[o++] = tmp[--i];
     out[o] = 0;
+}
+
+static void str_write(char **p, char *end, const char *s) {
+    while (*s && *p < end) {
+        **p = *s;
+        (*p)++;
+        s++;
+    }
+}
+
+static void write_u32(char **p, char *end, uint32_t v) {
+    char tmp[11];
+    u32_to_dec(v, tmp);
+    str_write(p, end, tmp);
+}
+
+static void write_2digits(char **p, char *end, uint32_t v0_99) {
+    if (*p >= end) return;
+    **p = (char)('0' + (v0_99 / 10u) % 10u);
+    (*p)++;
+    if (*p >= end) return;
+    **p = (char)('0' + (v0_99 % 10u));
+    (*p)++;
 }
 
 static void build_cpu_string(void) {
@@ -138,6 +162,7 @@ void sysconfig_init(void) {
         g_max_mhz = 0;
     }
 
+    sysconfig_format_kib(sysconfig_mem_total_kib(), g_mem_total_str, (uint32_t)sizeof(g_mem_total_str));
     build_cpu_string();
 }
 
@@ -161,3 +186,63 @@ uint32_t sysconfig_mem_total_kib(void) {
     return memory_total_kib();
 }
 
+void sysconfig_format_kib(uint32_t kib, char *out, uint32_t out_size) {
+    if (!out || out_size == 0) return;
+
+    out[0] = 0;
+    if (out_size == 1) return;
+
+    const char *unit = "KiB";
+    uint32_t int_part = kib;
+    uint32_t frac_2 = 0;
+    int show_frac = 0;
+
+    if (kib >= 1024u) {
+        unit = "MiB";
+        uint32_t div = 1024u;
+        int_part = kib / div;
+        uint32_t rem = kib % div;
+        frac_2 = (uint32_t)(((uint64_t)rem * 100ull + (uint64_t)div / 2ull) / (uint64_t)div);
+        show_frac = 1;
+
+        if (kib >= 1024u * 1024u) {
+            unit = "GiB";
+            div = 1024u * 1024u;
+            int_part = kib / div;
+            rem = kib % div;
+            frac_2 = (uint32_t)(((uint64_t)rem * 100ull + (uint64_t)div / 2ull) / (uint64_t)div);
+
+            if (kib >= 1024u * 1024u * 1024u) {
+                unit = "TiB";
+                div = 1024u * 1024u * 1024u;
+                int_part = kib / div;
+                rem = kib % div;
+                frac_2 = (uint32_t)(((uint64_t)rem * 100ull + (uint64_t)div / 2ull) / (uint64_t)div);
+            }
+        }
+
+        if (show_frac && frac_2 >= 100u) {
+            int_part += 1u;
+            frac_2 -= 100u;
+        }
+    }
+
+    char *p = out;
+    char *end = out + (out_size - 1u);
+
+    write_u32(&p, end, int_part);
+    if (show_frac) {
+        str_write(&p, end, ".");
+        write_2digits(&p, end, frac_2);
+    }
+    str_write(&p, end, " ");
+    str_write(&p, end, unit);
+    *p = 0;
+}
+
+const char* sysconfig_mem_total_str(void) {
+    if (g_mem_total_str[0] == 0) {
+        sysconfig_format_kib(sysconfig_mem_total_kib(), g_mem_total_str, (uint32_t)sizeof(g_mem_total_str));
+    }
+    return g_mem_total_str;
+}

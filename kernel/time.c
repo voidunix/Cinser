@@ -6,7 +6,7 @@
 
 #include <stdint.h>
 #include "time.h"
-#include "io.h" // NECESSÁRIO para outb/inb
+#include "io.h"
 
 // Frequência base do oscilador do chip PIT (1.193182 MHz)
 #define PIT_FREQUENCY 1193180
